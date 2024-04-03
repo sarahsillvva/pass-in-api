@@ -39,7 +39,8 @@ Nessa aplicação vamos utilizar banco de dados relacional (SQL). Para ambiente 
 
 ### Diagrama ERD
 
-<img src=".github/erd.svg" width="600" alt="Diagrama ERD do banco de dados" />
+![image](https://github.com/sarahsillvva/pass-in-api/assets/69436146/0ffc6ed8-5579-480b-a9be-6a18cffd0150)
+
 
 ### Estrutura do banco (SQL)
 
