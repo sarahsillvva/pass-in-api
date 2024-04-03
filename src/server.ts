@@ -1,32 +1,54 @@
 import fastify from "fastify";
-import { z } from "zod";
-import { PrismaClient} from '@prisma/client'
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUI from "@fastify/swagger-ui";
+import fastifyCors from "@fastify/cors";
 
+import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from "fastify-type-provider-zod";
+import { createEvent } from "./routes/create-event";
+import { registerForEvent } from "./routes/register-for-event";
+import { getEvent } from "./routes/get-events";
+import { getAttendeeBadge } from "./routes/get-attendee-badge";
+import { checkIn } from "./routes/check-in";
+import { getEventAttendees } from "./routes/get-events-attendees";
+import { errorHandler } from "./error-handler";
+ 
 const app = fastify ()
 
-const prisma = new PrismaClient({
-    log: ['query']
+app.register(fastifyCors,{
+    origin: '*'
 })
-app.post('/events', async (request, reply) =>{
-    const creatEventSchema = z.object({
-        title: z.string().min(4),
-        details: z.string().nullable(),
-        maximumAttendees: z.number().int().positive().nullable(),
-    })
 
-    const data = creatEventSchema.parse(request.body)
-
-    const event = await prisma.event.create({
-        data: {
-            title: data.title,
-            details: data.details,
-            maximumAttendees: data.maximumAttendees,
-            slug: new Date().toISOString(),
-        },
-    })
-
-    return reply.status(201).send({ eventId: event.id })
+app.register(fastifySwagger,{
+    swagger:{
+        consumes: ['aplication/json'],
+        produces: ['aplication/json'],
+        info: {
+            title: 'pass.in',
+            description: 'Especificações da API para o back-end da aplicação pass.in',
+            version: '1.0.0'
+        },  
+    },
+    transform: jsonSchemaTransform,
 })
-app.listen({ port: 333 }).then(()=>{
+
+app.register(fastifySwaggerUI,{
+    routePrefix: '/docs',
+})
+
+app.setValidatorCompiler(validatorCompiler);
+app.setSerializerCompiler(serializerCompiler);
+
+app.register(createEvent)
+app.register(registerForEvent)
+app.register(getEvent)
+app.register(getAttendeeBadge)
+app.register(checkIn)
+app.register(getEventAttendees)
+
+
+app.setErrorHandler(errorHandler)
+
+
+app.listen({ port: 333, host: '0.0.0.0' }).then(()=>{
     console.log("HTTP server running!")
 })

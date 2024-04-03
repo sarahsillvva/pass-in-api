@@ -1,0 +1,38 @@
+
+// CRIATE EVENT 
+POST http://localhost:333/events
+Content-Type: application/json
+
+{
+    "title": "Novo Projeto - outro não funcionou",
+    "details": null,
+    "maximumAttendees": 3
+}
+
+
+###
+// REGISTER PARTICIPANT IN EVENT 
+POST http://localhost:333/events/97065c0d-0cdf-426b-b067-3dc11b9d673c/attendees
+Content-Type: application/json
+{
+    "name": "Olivia",
+    "email": "Olivia@gmail.com"
+}
+
+###
+//GET INFORMATION FROM THE EVENT 
+GET http://localhost:333/events/97065c0d-0cdf-426b-b067-3dc11b9d673c
+
+###
+//EVENT ATTENDEES
+GET http://localhost:333/events/97065c0d-0cdf-426b-b067-3dc11b9d673c/attendees?query=livia
+
+
+###
+//ATTENDEES CHECK-IN
+GET http://localhost:333/attendees/14/check-in
+
+###
+//ATTENDEES TICKET
+GET http://localhost:333/attendees/13/badge
+

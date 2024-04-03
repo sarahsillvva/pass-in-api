@@ -1,9 +1,0 @@
-POST http://localhost:333/events
-Content-Type: application/json
-
-
-{
-    "title": "Unite summit",
-    "details": "Teste para programadores",
-    "maximumAttendees": 1000
-}
